@@ -59,6 +59,38 @@ void rand_matrix(matrix *result, unsigned int seed, double low, double high) {
  */
 int allocate_matrix(matrix **mat, int rows, int cols) {
     /* TODO: YOUR CODE HERE */
+    if( rows <= 0 || cols <= 0 ) {
+        return -1;
+    }
+
+    *mat = (matrix*) malloc( sizeof(matrix) );
+    if( *mat == NULL ) {
+        return -1;
+    }
+    (*mat)->rows = rows;
+    (*mat)->cols = cols;
+    (*mat)->is_1d = 0;
+    (*mat)->ref_cnt = 1;
+    (*mat)->parent = NULL;
+
+    size_t ptr_bytes = rows * sizeof(double*);
+    size_t data_bytes = rows * cols * sizeof(double);
+    // Allocate a single block for both row pointers and data
+    void *block = calloc(1, ptr_bytes + data_bytes);
+    if( block == NULL ) {
+        free(*mat);
+        *mat = NULL;
+        return -1;
+    }
+
+    (*mat)->data = (double**) block;
+    // Set row pointers    
+    double *data_start = (double*) ( (char*)block + ptr_bytes );
+    for( size_t i = 0; i < rows; i++ ) {
+        (*mat)->data[i] = data_start + i * cols;
+    }
+
+    return 0;
 }
 
 /*
@@ -71,6 +103,21 @@ int allocate_matrix(matrix **mat, int rows, int cols) {
 int allocate_matrix_ref(matrix **mat, matrix *from, int row_offset, int col_offset,
                         int rows, int cols) {
     /* TODO: YOUR CODE HERE */
+    if( row_offset < 0 || col_offset < 0 || rows <= 0 || cols <= 0 ) {
+        return -1;
+    }
+    if( row_offset + rows > from->rows || col_offset + cols > from->cols ) {
+        return -1;
+    }
+    
+    *mat = (matrix*) malloc( sizeof(matrix) );
+    (*mat)->rows = rows;
+    (*mat)->cols = cols;
+    (*mat)->is_1d = 0;
+    (*mat)->ref_cnt = 1;
+    (*mat)->parent = from;
+    
+    return 0;
 }
 
 /*
@@ -90,7 +137,8 @@ void deallocate_matrix(matrix *mat) {
  */
 double get(matrix *mat, int row, int col) {
     /* TODO: YOUR CODE HERE */
-}
+    return 0;
+}   
 
 /*
  * Set the value at the given row and column to val. You may assume `row` and
@@ -113,6 +161,7 @@ void fill_matrix(matrix *mat, double val) {
  */
 int add_matrix(matrix *result, matrix *mat1, matrix *mat2) {
     /* TODO: YOUR CODE HERE */
+    return 0;
 }
 
 /*
@@ -121,6 +170,7 @@ int add_matrix(matrix *result, matrix *mat1, matrix *mat2) {
  */
 int sub_matrix(matrix *result, matrix *mat1, matrix *mat2) {
     /* TODO: YOUR CODE HERE */
+    return 0;
 }
 
 /*
@@ -130,6 +180,7 @@ int sub_matrix(matrix *result, matrix *mat1, matrix *mat2) {
  */
 int mul_matrix(matrix *result, matrix *mat1, matrix *mat2) {
     /* TODO: YOUR CODE HERE */
+    return 0;
 }
 
 /*
@@ -139,6 +190,7 @@ int mul_matrix(matrix *result, matrix *mat1, matrix *mat2) {
  */
 int pow_matrix(matrix *result, matrix *mat, int pow) {
     /* TODO: YOUR CODE HERE */
+    return 0;
 }
 
 /*
@@ -147,6 +199,7 @@ int pow_matrix(matrix *result, matrix *mat, int pow) {
  */
 int neg_matrix(matrix *result, matrix *mat) {
     /* TODO: YOUR CODE HERE */
+    return 0;
 }
 
 /*
@@ -155,5 +208,6 @@ int neg_matrix(matrix *result, matrix *mat) {
  */
 int abs_matrix(matrix *result, matrix *mat) {
     /* TODO: YOUR CODE HERE */
+    return 0;
 }
 

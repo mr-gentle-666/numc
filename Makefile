@@ -1,8 +1,8 @@
 CC = gcc
 CFLAGS = -g -Wall -std=c99 -fopenmp -mavx -mfma -pthread
 LDFLAGS = -fopenmp
-CUNIT = -L/home/ff/cs61c/cunit/install/lib -I/home/ff/cs61c/cunit/install/include -lcunit
-PYTHON = -I/usr/include/python3.6 -lpython3.6m
+CUNIT = -L$(CONDA_PREFIX)/lib -I$(CONDA_PREFIX)/include -lcunit
+PYTHON = -I/home/gyy/miniconda3/envs/numc_env/include/python3.6m -lpython3.6m
 
 install:
 	if [ ! -f files.txt ]; then touch files.txt; fi
@@ -23,7 +23,7 @@ clean:
 
 test:
 	rm -f test
-	$(CC) $(CFLAGS) mat_test.c matrix.c -o test $(LDFLAGS) $(CUNIT) $(PYTHON)
+	$(CC) $(CFLAGS) mat_test.c matrix.c -o test $(LDFLAGS) $(CUNIT) $(PYTHON) -Wl,-rpath,$(CONDA_PREFIX)/lib
 	./test
 
 .PHONY: test
